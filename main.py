@@ -35,6 +35,7 @@ score = 0
 while running:
     if begin:
         begin = False
+        game_over = False
         time = 0
         snake_rect = pygame.rect.Rect(
             [randrange(0, config.SCREEN_SIZE, config.GRID_CELL_SIZE),
