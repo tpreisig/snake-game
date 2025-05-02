@@ -29,17 +29,22 @@ The code initializes Pygame and sets up the game window using ```pygame.display.
    ```
 4. Install the Pygame library:
    ```bash
-   pip install Pygame
+   pip install pygame-ce
    ```
 ## Usage
 
 To start the application, run the command:
 ```bash
-python3 -m main
+python3 -m game
 ```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Visuals
+
+![Screenshot](assets/game.png)
+
 
 ## Contact
 
