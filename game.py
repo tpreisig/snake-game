@@ -64,7 +64,7 @@ while running:
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             running = False
         elif event.type == pygame.KEYDOWN and game_over:
-            begin = False  # Restart the game if game over and key pressed
+            begin = True  # Restart the game if game over and key pressed
         # Movement Direction Constraints (only if game is not over)
         elif not game_over:
             if event.type == pygame.KEYDOWN:
