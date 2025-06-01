@@ -21,6 +21,23 @@ screen = pygame.display.set_mode((config.SCREEN_SIZE, config.SCREEN_SIZE))
 pygame.display.set_caption("Snake Game")
 clock = pygame.time.Clock()
 
+gradient_surface = pygame.Surface((config.SCREEN_SIZE, config.SCREEN_SIZE))
+# Function to create a gradient
+def create_linear_gradient(surface, start_color, end_color):
+    width, height = surface.get_size()
+    # interpolation
+    for y in range(height):
+        t = y / (height -1)
+        r = int(start_color[0] + t * (end_color[0] - start_color[0]))
+        b = int(start_color[1] + t * (end_color[1] - start_color[1]))
+        g = int(start_color[2] + t * (end_color[2] - start_color[2]))
+        pygame.draw.line(surface, (r, g, b), (0, y), (width - 1, y))
+
+# Generate the gradient once (since it doesn't change)
+create_linear_gradient(gradient_surface, config.COLOR_START, config.COLOR_END)
+
+
+
 font = pygame.freetype.SysFont(None, 54)
 
 
@@ -67,7 +84,7 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if game_over:
-                if pygame.time.get_ticks() - game_over_time > 2000:
+                if pygame.time.get_ticks() - game_over_time > 600:
                     begin = True  # Restart game
             else:
                 # Movement Direction Constraints
@@ -82,8 +99,8 @@ while running:
 
     if not game_over:
         time_now = pygame.time.get_ticks()
-
-        screen.fill(config.BG_COLOR)
+        screen.blit(gradient_surface, (0, 0))
+        
         for n in range(0, config.SCREEN_SIZE, config.GRID_CELL_SIZE):
             pygame.draw.line(screen, config.GRID_COLOR, (n, 0), (n, config.SCREEN_SIZE))
             pygame.draw.line(screen, config.GRID_COLOR, (0, n), (config.SCREEN_SIZE, n))
