@@ -4,6 +4,20 @@ from random import randrange
 import config
 import pygame.freetype
 
+def save_high_score(high_score):
+    try:
+        with open("high_score.txt", "w") as file:
+            file.write(str(high_score))
+    except Exception as e:
+        print(f"Error saving high score: {e}")
+
+def load_high_score():
+    try:
+        with open("high_score.txt", "r") as file:
+            return int(file.read().strip())
+    except (FileNotFoundError, ValueError):
+        return 0 
+
 pygame.init()
 pygame.mixer.init()
 
@@ -37,9 +51,10 @@ def create_linear_gradient(surface, start_color, end_color):
 create_linear_gradient(gradient_surface, config.COLOR_START, config.COLOR_END)
 
 
-
 font = pygame.freetype.SysFont(None, 54)
 
+high_score = load_high_score()
+print(f"High Score: {high_score}")
 
 running = True
 begin = True
@@ -81,6 +96,10 @@ while running:
         # Quit event or escape key press
         if (event.type == pygame.QUIT or
                 (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE)):
+            # update high score before exiting
+            if score > high_score:
+                high_score = score
+                save_high_score(high_score)
             running = False
         elif event.type == pygame.KEYDOWN:
             if game_over:
@@ -116,6 +135,10 @@ while running:
                     snake_rect.top < 0 or snake_rect.bottom > config.SCREEN_SIZE) or snake_parts.count(snake_rect) > 1:
                 game_over = True
                 game_over_time = pygame.time.get_ticks()  # record when game over occurred
+                # updating high score
+                if score > high_score:
+                    high_score = score
+                    save_high_score(high_score)
 
         pygame.draw.rect(screen, config.FOOD_COLOR, food_rect)
         [pygame.draw.rect(screen, config.SNAKE_COLOR, snake_part) for snake_part in snake_parts]
@@ -134,7 +157,11 @@ while running:
         score_text = f"Score: {score}"
         rect = font.get_rect(score_text)
         rect.topleft = (31, 21)
-        font.render_to(screen, rect, score_text, config.SCORE_COLOR )
+        font.render_to(screen, rect, score_text, config.SCORE_COLOR)
+        high_score_text = f"High Score: {high_score}"
+        rect = font.get_rect(high_score_text)
+        rect.topleft = (360, 21)
+        font.render_to(screen, rect, high_score_text, config.SCORE_COLOR)
 
     else:
         # Game Over Screen
